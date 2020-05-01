@@ -124,6 +124,7 @@
      <Compile Include="Assets\Scripts\GroundDraw.cs" />
      <Compile Include="Assets\Scripts\MovementController.cs" />
      <None Include="Assets\Acquired\PennyPixel_2DTilemapProject\Assets\Add-Ons\2D Extras\Brushes\Tint Brush Smooth\Shaders\TintedTilemap.shader" />
+     <None Include="Assets\Fonts\SourceCodePro\OFL.txt" />
      <None Include="Assets\Acquired\PennyPixel_2DTilemapProject\ProjectSettings\ProjectVersion.txt" />
      <None Include="Assets\Acquired\PennyPixel_2DTilemapProject\Assets\Add-Ons\Cinemachine\ReleaseNotes.txt" />
  <Reference Include="Unity.TextMeshPro.Editor">

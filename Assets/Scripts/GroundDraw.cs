@@ -6,18 +6,21 @@ public class GroundDraw : MonoBehaviour
 {
 
     public GameObject linePrefab;
-    public GameObject currentLine;
+    private GameObject currentLine;
 
-    public LineRenderer lineRenderer;
-    public EdgeCollider2D edgeCollider;
+    private LineRenderer lineRenderer;
+    private EdgeCollider2D edgeCollider;
 
 
-    public List<Vector2> fingerPositions;
+    private List<Vector2> linePointList;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        linePointList = new List<Vector2>();
+
+        CreateLineFromArray();
 
     }
 
@@ -29,24 +32,33 @@ public class GroundDraw : MonoBehaviour
             CreateLine();
         }
 
-        if (Input.GetMouseButton(0) && fingerPositions.Count > 0)
+        if (Input.GetMouseButton(0) && linePointList.Count > 0)
         {
-            Vector2 tempFingerPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            if (Vector2.Distance(tempFingerPos, fingerPositions[fingerPositions.Count - 1]) > .1f)
+            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            if (Vector2.Distance(mousePosition, linePointList[linePointList.Count - 1]) > 0.1f)
             {
-                UpdateLine(tempFingerPos);
+                ExtendLine(mousePosition);
             }
 
+        }
+
+
+        if (Input.GetMouseButtonDown(2))
+        {
+            foreach (var p in linePointList)
+            {
+                Debug.Log("x= " + p.x.ToString() +" y= " + p.y.ToString());
+            }
         }
     }
 
 
-    void UpdateLine(Vector2 newFingerPos)
+    void ExtendLine(Vector2 newPoint)
     {
-        fingerPositions.Add(newFingerPos);
+        linePointList.Add(newPoint);
         lineRenderer.positionCount++;
-        lineRenderer.SetPosition(lineRenderer.positionCount - 1, newFingerPos);
-        edgeCollider.points = fingerPositions.ToArray();
+        lineRenderer.SetPosition(lineRenderer.positionCount - 1, newPoint);
+        edgeCollider.points = linePointList.ToArray();
 
     }
 
@@ -56,14 +68,54 @@ public class GroundDraw : MonoBehaviour
         lineRenderer = currentLine.GetComponent<LineRenderer>();
         edgeCollider = currentLine.GetComponent<EdgeCollider2D>();
 
-        fingerPositions.Clear();
+        linePointList.Clear();
 
-        fingerPositions.Add(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-        fingerPositions.Add(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+        linePointList.Add(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+        linePointList.Add(Camera.main.ScreenToWorldPoint(Input.mousePosition));
 
-        lineRenderer.SetPosition(0, fingerPositions[0]);
-        lineRenderer.SetPosition(1, fingerPositions[1]);
+        lineRenderer.SetPosition(0, linePointList[0]);
+        lineRenderer.SetPosition(1, linePointList[1]);
 
-        edgeCollider.points = fingerPositions.ToArray();
+        edgeCollider.points = linePointList.ToArray();
     }
+
+
+    void CreateLineFromArray()
+    {
+
+        linePointList.Add(new Vector2(-9f, -3.8f));
+        linePointList.Add(new Vector2(-8f, -3.8f));
+        linePointList.Add(new Vector2(-7f, -2.0f));
+        linePointList.Add(new Vector2(-6f, -2.0f));
+        linePointList.Add(new Vector2(-5f, -3.8f));
+        linePointList.Add(new Vector2(-4f, -3.8f));
+        linePointList.Add(new Vector2(-3f, -2.0f));
+        linePointList.Add(new Vector2(-2f, -2.0f));
+        linePointList.Add(new Vector2(-1f, -3.8f));
+        linePointList.Add(new Vector2(0f, -3.8f));
+        linePointList.Add(new Vector2(1f, -2.0f));
+        linePointList.Add(new Vector2(2f, -2.0f));
+        linePointList.Add(new Vector2(3f, -3.8f));
+        linePointList.Add(new Vector2(4f, -3.8f));
+        linePointList.Add(new Vector2(5f, -2.0f));
+        linePointList.Add(new Vector2(6f, -2.0f));
+        linePointList.Add(new Vector2(7f, -3.8f));
+        linePointList.Add(new Vector2(8f, -3.8f));
+        linePointList.Add(new Vector2(9f, -3.8f));
+
+        currentLine = Instantiate(linePrefab, Vector3.zero, Quaternion.identity);
+        lineRenderer = currentLine.GetComponent<LineRenderer>();
+        edgeCollider = currentLine.GetComponent<EdgeCollider2D>();
+
+        int i = 0;
+        foreach (var p in linePointList)
+        {
+            lineRenderer.positionCount = i + 1;
+            lineRenderer.SetPosition(i++, p);
+        }
+
+        edgeCollider.points = linePointList.ToArray();
+
+    }
+
 }
